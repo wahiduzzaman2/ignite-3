@@ -1,0 +1,30 @@
+name: Java Ci
+
+on: [push, pull_request]
+
+jobs:
+  run_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 8
+
+      - name: Run Test
+        run: mvn -pl modules/page-memory test -Dtest="org.apache.ignite.internal.pagememory.freelist.AbstractFreeListTest#testMultiThread"
+                
+  run_test_with_nondex:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: 8
+        
+    - name: Run Test w nondex
+      run: mvn -plmodules/page-memory edu.illinois:nondex-maven-plugin:1.1.2:nondex -Dtest="org.apache.ignite.internal.pagememory.freelist.AbstractFreeListTest#testMultiThread"
